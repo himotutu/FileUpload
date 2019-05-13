@@ -1,0 +1,27 @@
+	@RequestMapping("add")
+	public String add(Student stu,MultipartFile headimg,HttpServletRequest request){
+		//判断传来的文件不等于空长度要大于0
+		if(headimg!=null && headimg.getSize()>0){
+			//我们要得到存放头像像的文件夹路径就需要现在参数里创建application对象
+			//然后通过该对象获得根目录下的headimg文件夹的绝对路径
+			String bastpath = request.getServletContext().getRealPath("headimg");
+			//获得了根目录我们就可以把MultipartFile headimg对象写到根目录下面去
+			//这时需要获取上传文件的名称以获取后缀名
+			String upfilename = headimg.getOriginalFilename();
+			String suffix = upfilename.substring(upfilename.lastIndexOf("."));
+			//动态生成一个32位不重复的文件名
+			String filename = UUID.randomUUID()+suffix;
+			//把上传的文件写入到指定的路径里去
+			try {
+				headimg.transferTo(new File(bastpath+"/"+filename));
+			} catch (Exception e) {
+			}
+			//将路径保存到实体中，存入到数据库
+			stu.setImgpath(filename);
+		}
+		if(studentService.addStudent(stu)){
+			//这里使用重定向跳转到show请求里，而不是跳转到show.jsp页面
+			return "redirect:/show";
+		}
+		return "redirect:/addpage";
+	}

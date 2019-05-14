@@ -1,7 +1,6 @@
-package cn.laymm.BuiltIn.lmUplod.controller;
+package com.qhit.utils;
 
-import cn.laymm.BuiltIn.lmUplod.pojo.LmUpload;
-import cn.laymm.Common.PathCommon;
+
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,12 +17,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = "/upload")
 public class LmUplodController {
-	
+
     //上传图片
     @RequestMapping(value = "/images", method = RequestMethod.POST)
-    public LmUpload uploadImages(@RequestParam("file") MultipartFile file) throws IOException {
-        
-		//获取名字
+    public Map<String, String> uploadImages(@RequestParam("file") MultipartFile file) throws IOException {
+
+        //获取名字
         String fileName = UUID.randomUUID().toString() + file.getOriginalFilename();
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
         //获取跟目录
@@ -43,11 +42,9 @@ public class LmUplodController {
         Map<String, String> result = new HashMap<String, String>();
         result.put("name", file.getOriginalFilename());
         result.put("size", String.valueOf(file.getSize()));
-        LmUpload json = new LmUpload();
-        json.setCode(200);
-        json.setFilename(fileName);
-        return json;
+
+        return result;
     }
 
-    
+
 }

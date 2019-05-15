@@ -45,6 +45,34 @@ public class LmUplodController {
 
         return result;
     }
+	 //多文件上传
+    @RequestMapping(value = "/duoimages",method = RequestMethod.POST)
+    public List<Map<String, Object>> uploadduo(@RequestParam("file") MultipartFile[] files) throws IOException {
+        //获取跟目录
+        File path = new File(ResourceUtils.getURL("classpath:").getPath());
+        if (!path.exists()) {
+            path = new File("");
+        }
+        //如果上传目录为/static/images/upload/,则可以如下获取
+        File fileDir = new File(path.getAbsolutePath(), "/static/images/upload/");
+        if (!fileDir.exists()) {
+            fileDir.mkdirs();
+            System.out.println(fileDir.getAbsolutePath());
+            //在开发测试模式时，得到地址为：{项目跟目录}/target/static/images/upload/
+            //在打成jar正式发布时，得到的地址为:{发布jar包目录}/static/images/upload/
+        }
+        List<Map<String,Object>> list = new ArrayList<>();
+        for (int i = 0; i <files.length ; i++) {
+            String filename = files[i].getOriginalFilename();
+            files[i].transferTo(new File(fileDir,filename));
+            Map<String,Object> map = new HashMap<>();
+            map.put("name",filename);
+            map.put("size",files[i].getSize());
+            list.add(map);
+        }
+        return list;
+    }
+
 
 
 }

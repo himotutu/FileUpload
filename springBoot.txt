@@ -1,0 +1,7 @@
+servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 200MB
+
+在yml中设置文件大小
